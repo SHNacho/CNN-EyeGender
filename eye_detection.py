@@ -1,7 +1,14 @@
 import numpy as np
 import cv2
+import tensorflow as tf
+import keras
+from tensorflow.keras.models import load_model
+from keras.preprocessing import image
+import numpy
 
 #cv2.data requiere pip3 install opencv-contrib-python
+
+model = load_model('./eye_gendre.h5')
 
 cap = cv2.VideoCapture(0)
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
@@ -29,5 +36,11 @@ while True:
 while cv2.waitKey(1) != ord('w'):
     cv2.imshow('ojo', ojo)
 
+print(ojo)
+ojo = cv2.resize(ojo, (75, 75), interpolation = cv2.INTER_AREA)
+ojo_tensor = image.img_to_array(ojo)
+ojo_tensor = np.expand_dims(ojo, axis=0)
+pred = model.predict(ojo_tensor)
+print(pred)
 cap.release()
 cv2.destroyAllWindows
